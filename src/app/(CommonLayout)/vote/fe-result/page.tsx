@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Candidate } from 'types/CandidateType';
 import useRanking from '@utils/useRanking';
-
+import SpinnerSVG from '@public/spinner.svg';
 
 
 export default function Page() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [candidateRanking, setCandidateRanking] = useState<Candidate[]>([]);
   const rankingIndexes = useRanking(candidateRanking);
 
@@ -19,9 +20,17 @@ export default function Page() {
       const response = await fetch('/api/vote/fe-result');
       const data: Candidate[] = await response.json();
       setCandidateRanking(data);
+      setLoading(false);
     }
     getPartResultData();
   }, []);
+
+  if (loading)
+    return (
+      <div className="flex flex-col w-full h-full justify-center items-center">
+        <SpinnerSVG className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-themeColor" />
+      </div>
+    );
 
   return (
     <div className="flex flex-col w-full h-full relative px-[30px] pt-[120px] items-center">

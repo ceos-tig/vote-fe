@@ -6,6 +6,7 @@ import useRanking from '@utils/useRanking';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Candidate } from 'types/CandidateType';
+import SpinnerSVG from '@public/spinner.svg';
 
 
 
@@ -24,7 +25,7 @@ const DUMMYCANDIDATERANKING: Candidate[] = [
 
 export default function Page() {
   const router = useRouter();
-
+  const [loading, setLoading] = useState(true);
   const [candidateRanking, setCandidateRanking] = useState<Candidate[]>([]);
   const rankingIndexes = useRanking(candidateRanking);
 
@@ -35,10 +36,18 @@ export default function Page() {
       const data: Candidate[] = await response.json();
 
       setCandidateRanking(data);
+      setLoading(false);
     }
 
     getPartResultData();
   }, []);
+
+  if (loading)
+    return (
+      <div className="flex flex-col w-full h-full justify-center items-center">
+        <SpinnerSVG className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-themeColor" />
+      </div>
+    );
 
   return (
     <div className="flex flex-col w-full h-full relative px-5 pt-[120px] items-center">
