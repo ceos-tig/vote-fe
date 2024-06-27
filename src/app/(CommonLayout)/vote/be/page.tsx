@@ -3,6 +3,7 @@ import ArrowBackSVG from '@public/arrowBack.svg';
 import { Header } from '@components/all/Header';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import SpinnerSVG from '@public/spinner.svg';
 
 const CandidateName = [
   '임형준',
@@ -25,6 +26,7 @@ export default function Page() {
   const [votedIdx, setVotedIdx] = useState<number>(-1);
   const [isVoted, setIsVoted] = useState<number>(0);
   const [part, setPart] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const username =
     typeof window !== 'undefined' ? localStorage.getItem('username') : null;
 
@@ -69,6 +71,7 @@ export default function Page() {
 
       setPart(data.result.status);
       setIsVoted(data.result.isVoted);
+      setLoading(false);
     }
 
     if (localStorageToken !== null) {
@@ -77,6 +80,13 @@ export default function Page() {
       return;
     }
   }, []);
+
+  if (loading)
+    return (
+      <div className="flex flex-col w-full h-full justify-center items-center">
+        <SpinnerSVG className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-themeColor" />
+      </div>
+    );
 
   return (
     <div className="flex flex-col w-full h-full px-[30px] relative pt-[80px] items-center">
@@ -130,7 +140,7 @@ export default function Page() {
         }`}
         disabled={isVoted === 1 || part !== 'BACKEND' || votedIdx === -1}
       >
-        {DUMMYRESPONSE.isVoted ? '투표완료' : '투표하기'}
+        {isVoted ? '투표완료' : '투표하기'}
       </button>
     </div>
   );
