@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import useRanking from '@utils/useRanking';
 import { type teamProp } from 'types/CandidateType';
-
+import SpinnerSVG from '@public/spinner.svg';
 
 export default function TeamResultPage() {
   const [teamState, setTeamState] = useState<teamProp[]>([]);
+  const [loading, setLoading] = useState(true);
   const rankingIndexes = useRanking(teamState);
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function TeamResultPage() {
       });
 
       setTeamState(tmpData);
+      setLoading(false);
     }
 
     getTeamResultData();
@@ -35,10 +37,13 @@ export default function TeamResultPage() {
 
   const router = useRouter();
 
-  // 대체 UI임 : 첫 렌더링 시에 보이지 않는 문제를 해결하기 위함임
-  if (teamState.length === 0) {
-    return null;
-  }
+  if (loading)
+    return (
+      <div className="flex flex-col w-full h-full justify-center items-center">
+        <SpinnerSVG className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-themeColor" />
+      </div>
+    );
+
   return (
     <div className="flex flex-col w-full h-full relative px-5 pt-[120px] items-center">
       <Header />
@@ -62,7 +67,9 @@ export default function TeamResultPage() {
               key={team.teamName}
               className="flex justify-between items-center w-[100%] h-[70px] text-[28px] px-[30px] border-b border-gray-200"
             >
-              <div className="basis-[40px] flex justify-center">{rankingIndexes[idx+1]}</div>
+              <div className="basis-[40px] flex justify-center">
+                {rankingIndexes[idx + 1]}
+              </div>
               <div className="flex items-center">{team.teamName}</div>
               <div>{team.voteCount}표</div>
             </div>
