@@ -1,41 +1,18 @@
 'use client';
-import { voteFetchWithToken } from '@apis/fetchAPI';
 import { Header } from '@components/all/Header';
 import ArrowBackSVG from '@public/arrowBack.svg';
 import CrownSVG from '@public/crown.svg';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { type Candidate } from 'types/CandidateType';
+import useRanking from '@utils/useRanking';
 
-interface Candidate {
-  leaderName: string;
-  voteCount: number;
-}
+
 
 export default function Page() {
   const router = useRouter();
   const [candidateRanking, setCandidateRanking] = useState<Candidate[]>([]);
-
-  let rankingIndex = 1;
-  let count = 1;
-
-  const rankingIndexes = candidateRanking.map((candidate, idx) => {
-    if (
-      idx < candidateRanking.length - 1 &&
-      candidate.voteCount !== candidateRanking[idx + 1].voteCount
-    ) {
-      const temp = rankingIndex;
-      rankingIndex += count;
-      count = 1;
-      return temp;
-    } else {
-      count++;
-      return rankingIndex;
-    }
-  });
-
-  if (count > 1) {
-    rankingIndexes[rankingIndexes.length - 1] = rankingIndex;
-  }
+  const rankingIndexes = useRanking(candidateRanking);
 
   useEffect(() => {
     async function getPartResultData() {

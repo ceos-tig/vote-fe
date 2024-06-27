@@ -3,7 +3,6 @@ import ArrowBackSVG from '@public/arrowBack.svg';
 import { Header } from '@components/all/Header';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { voteFetchWithToken } from '@apis/fetchAPI';
 
 const CandidateName = [
   '임형준',
@@ -25,7 +24,7 @@ export default function Page() {
   const router = useRouter();
   const [votedIdx, setVotedIdx] = useState<number>(-1);
   const [isVoted, setIsVoted] = useState<number>(0);
-  const [part, setPart] = useState<string | null>('');
+  const [part, setPart] = useState<string | null>(null);
   const username =
     typeof window !== 'undefined' ? localStorage.getItem('username') : null;
 

@@ -4,14 +4,13 @@ import ArrowBackSVG from '@public/arrowBack.svg';
 import CrownSVG from '@public/crown.svg';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import useRanking from '@utils/useRanking';
+import { type teamProp } from 'types/CandidateType';
 
-interface teamProp {
-  teamName: string;
-  voteCount: number;
-}
 
 export default function TeamResultPage() {
   const [teamState, setTeamState] = useState<teamProp[]>([]);
+  const rankingIndexes = useRanking(teamState);
 
   useEffect(() => {
     async function getTeamResultData() {
@@ -63,7 +62,7 @@ export default function TeamResultPage() {
               key={team.teamName}
               className="flex justify-between items-center w-[100%] h-[70px] text-[28px] px-[30px] border-b border-gray-200"
             >
-              <div className="basis-[40px] flex justify-center">{idx + 2}</div>
+              <div className="basis-[40px] flex justify-center">{rankingIndexes[idx+1]}</div>
               <div className="flex items-center">{team.teamName}</div>
               <div>{team.voteCount}표</div>
             </div>

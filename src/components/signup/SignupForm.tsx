@@ -64,7 +64,7 @@ export default function SignupForm() {
   return (
     <form
       action=""
-      className="w-full h-fit flex flex-col gap-y-5 items-center relative mb-4"
+      className="w-full h-fit flex flex-col gap-y-4 items-center relative mb-4"
       onSubmit={handleSubmitSignupForm}
     >
       <div className="loginSignupItem">
