@@ -77,6 +77,7 @@ export default function Page() {
     if (localStorageToken !== null) {
       getTeamData();
     } else {
+      setLoading(false);
       return;
     }
   }, []);

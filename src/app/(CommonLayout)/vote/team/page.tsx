@@ -1,5 +1,6 @@
 'use client';
 import ArrowBackSVG from '@public/arrowBack.svg';
+import SpinnerSVG from '@public/spinner.svg';
 import { Header } from '@components/all/Header';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -7,10 +8,12 @@ import { useState, useEffect } from 'react';
 const TeamName = ['AZITO', 'BEATBUDDY', 'TIG', 'BULDOG', 'COUPLELOG'];
 
 export default function TeamPage() {
+  const router = useRouter();
   const [votedIdx, setVotedIdx] = useState<number>(-1);
   // const [isVoted, setIsVoted] = useState<0 | 1>(0); // 투표를 안했으면 0 했으면 1
   const [isVoted, setIsVoted] = useState<0 | 1>(0);
   const [team, setTeam] = useState<string | null>(null); // 일단 임시 데이터 TIG
+  const [loading, setLoading] = useState(true);
 
   const handleSubmitTeamVote = async () => {
     try {
@@ -55,15 +58,24 @@ export default function TeamPage() {
       // 이거를 기반으로 팀 이름 상태와 투표 했는지 상태가 연동되어야 함
       setTeam(data.result.status);
       setIsVoted(data.result.isVoted);
+      setLoading(false);
     }
 
     if (localStorageToken !== null) {
       getTeamData();
     } else {
+      setLoading(false);
       return;
     }
   }, []);
-  const router = useRouter();
+
+  if (loading)
+    return (
+      <div className="flex flex-col w-full h-full justify-center items-center">
+        <SpinnerSVG className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-themeColor" />
+      </div>
+    );
+
   return (
     <div className="flex flex-col w-full h-full px-[30px] relative pt-[80px] items-center">
       <Header />
